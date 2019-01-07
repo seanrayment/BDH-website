@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {bdhRequester} from './requests';
 import './index.css';
 import './general-style.css';
 import './fixed-style.css';
@@ -106,7 +107,9 @@ function renderAd() {
 	ReactDOM.render(<Advertisement_728x90 adUnit="BDH_Footer_728x90" />, document.getElementById('728x90f'));
 }
 
-renderHeader();
+console.log("Hey, this is working!");
+bdhRequester.getArticles({order: "-first_published_at"});
+//renderHeader();
 renderFooter();
 renderSidebar();
 //renderIndexFeatured();
@@ -116,3 +119,4 @@ renderArticle();
 //renderNonSports();
 //renderAuthorInfo();
 registerServiceWorker();
+

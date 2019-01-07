@@ -32,13 +32,13 @@ class Header extends Component {
   }
 
   //add authors to query later
-  keyPress(event) {
-    if(event.keyCode==13){
-      this.client.query({ query })
-      .then(data => console.log(data))
-      .catch(error => console.error(error));
-    }
-  }
+  // keyPress(event) {
+  //   if(event.keyCode==13){
+  //     this.client.query({ query })
+  //     .then(data => console.log(data))
+  //     .catch(error => console.error(error));
+  //   }
+  // }
 
   render() {
 

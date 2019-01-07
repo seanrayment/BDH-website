@@ -42,8 +42,11 @@ export const bdhRequester = {
     getArticles(customParams) {
         const params = {};
 
-        Axios.get('/api/v2/pages/', params)
+        const mergedParams = {...this.defaultArticleParams, ...customParams, ...params};
+
+        Axios.get('/api/v2/pages/', {params: mergedParams})
             .then(function (response) {
+                console.log(response.data);
                 return response;
             });
     },
@@ -87,7 +90,7 @@ export const bdhRequester = {
      * @returns {*}
      */
     getNewArticles(limit) {
-        return this.getArticles({order: "-first_published_at", limit: '10'});
+        return this.getArticles({order: "-first_published_at", limit: 10});
     },
 
 
