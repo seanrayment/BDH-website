@@ -107,9 +107,7 @@ function renderAd() {
 	ReactDOM.render(<Advertisement_728x90 adUnit="BDH_Footer_728x90" />, document.getElementById('728x90f'));
 }
 
-console.log("Hey, this is working!");
-bdhRequester.getArticles({order: "-first_published_at"});
-//renderHeader();
+renderHeader();
 renderFooter();
 renderSidebar();
 //renderIndexFeatured();

@@ -8,7 +8,7 @@ export const bdhRequester = {
     },
 
     defaultAuthorParams: {
-        type: 'newspaper.AuthorPage',
+        type: 'newspaper.AuthorsPage',
         fields: 'name,lastName,description,position,year',
     },
 
@@ -46,7 +46,6 @@ export const bdhRequester = {
 
         Axios.get('/api/v2/pages/', {params: mergedParams})
             .then(function (response) {
-                console.log(response.data);
                 return response;
             });
     },
@@ -64,7 +63,7 @@ export const bdhRequester = {
             });
     },
 
-    getAuthor(customParams) {
+    getAuthors(customParams) {
         const params = {};
 
         const mergedParams = {...this.defaultAuthorParams, ...customParams, ...params};
