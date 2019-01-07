@@ -91,15 +91,17 @@ class Author(models.Model):
         """
         return '{0} {1}, {2}'.format(self.first_name,self.last_name,self.year)
 '''
+
+
 ###add in utility methods to get stuff from the database - for testing, instantiate the local db
 
 
-#START OF NEW MODELS
-#NOTE: This is not 100% finalized
+# START OF NEW MODELS
+# NOTE: This is not 100% finalized
 
 
 class Author(models.Model):
-    #id = models.IntegerField(primary_key=True)
+    # id = models.IntegerField(primary_key=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     pathtopicture = models.CharField(max_length=100, blank=True, null=True)
@@ -107,18 +109,17 @@ class Author(models.Model):
     since = models.DateField()
     about = models.TextField()
     valid = models.BooleanField()
-    maybewrong = models.BooleanField(default = False)
+    maybewrong = models.BooleanField(default=False)
 
 
-    #class Meta:
+    # class Meta:
     #    managed = False
     #    db_table = 'Author'
 
+
 class Image(models.Model):
-    #id = models.IntegerField(primary_key=True)
+    # id = models.IntegerField(primary_key=True)
     file_path = models.CharField(max_length=300)
-
-
 
 
 class Category(models.Model):
@@ -126,28 +127,27 @@ class Category(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
 
 
-
 class Tag(models.Model):
     name = models.CharField(unique=True, max_length=50)
 
-    #class Meta:
+    # class Meta:
     #    managed = False
     #    db_table = 'Topic'
 
 
 class Article(models.Model):
-    #id = models.IntegerField(primary_key=True)
-    body = models.TextField(default = "")
+    # id = models.IntegerField(primary_key=True)
+    body = models.TextField(default="")
     title = models.CharField(max_length=100)
-    #posted_date = models.DateField(auto_now=True)
-    #modified_date = models.DateField(auto_now_add=True)
+    # posted_date = models.DateField(auto_now=True)
+    # modified_date = models.DateField(auto_now_add=True)
     posted_date = models.DateField()
     modified_date = models.DateField()
     authors = models.ManyToManyField(Author)
     image_url = models.ManyToManyField(Image)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     topic = models.ManyToManyField(Tag)
-    maybewrong = models.BooleanField(default = False)
+    maybewrong = models.BooleanField(default=False)
 
 
 '''class AuthGroup(models.Model):
@@ -158,7 +158,6 @@ class Article(models.Model):
         db_table = 'auth_group'
 '''
 
-
 '''class AuthGroupPermissions(models.Model):
     group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
     permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
@@ -167,7 +166,6 @@ class Article(models.Model):
         managed = False
         db_table = 'auth_group_permissions'
         unique_together = (('group', 'permission'),)'''
-
 
 '''class AuthPermission(models.Model):
     name = models.CharField(max_length=255)
@@ -179,7 +177,6 @@ class Article(models.Model):
         db_table = 'auth_permission'
         unique_together = (('content_type', 'codename'),)
 '''
-
 
 '''
 class AuthUser(models.Model):
@@ -264,9 +261,7 @@ class DjangoSession(models.Model):
 
 '''
 
-
-
-#END OF NEW MODELS
+# END OF NEW MODELS
 from django.shortcuts import get_object_or_404
 
 from wagtail.core.models import Page
@@ -274,39 +269,40 @@ from wagtail.core.fields import RichTextField
 from wagtail.core import blocks
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from pprint import pprint #debugging
+from pprint import pprint  # debugging
+from wagtail.api import APIField
 from wagtail.search import index
 
-class ArticlePage(RoutablePageMixin, Page):
 
+class ArticlePage(RoutablePageMixin, Page):
     content = RichTextField(blank=True)
     section_list = (
-                ('h', 'Home'),
-            	('n', 'News'),
-            	('ac', 'Arts & Culture'),
-            	('sr', 'Science & Research'),
-            	('sp', 'Sports'),
-                ('op', 'Opinion'),
-                ('pt', 'Post'),
-                ('blg', 'Blog'),
-            )
+        ('h', 'Home'),
+        ('n', 'News'),
+        ('ac', 'Arts & Culture'),
+        ('sr', 'Science & Research'),
+        ('sp', 'Sports'),
+        ('op', 'Opinion'),
+        ('pt', 'Post'),
+        ('blg', 'Blog'),
+    )
     section = models.CharField(max_length=8, choices=section_list, blank=True, default='h')
     summary = RichTextField(blank=True)
 
     yes_no = {
-            ('y', 'Yes'),
-            ('n', 'No'),
-        }
+        ('y', 'Yes'),
+        ('n', 'No'),
+    }
 
     featured_on_section = models.CharField(max_length=2, choices=yes_no, blank=True, default='y')
     featured_on_main = models.CharField(max_length=2, choices=yes_no, blank=True, default='y')
 
     # make sure it displays both the authors' names and their position 
-    #authors = models.ManyToManyField(AuthorsPage, help_text="Select author names")
+    # authors = models.ManyToManyField(AuthorsPage, help_text="Select author names")
 
     # need to figure out how to make the tags become links, should we use a list instead
     # of plain charfield?
-    tags = models.CharField(max_length = 255, blank=True)
+    tags = models.CharField(max_length=255, blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('content', classname="class"),
@@ -315,7 +311,7 @@ class ArticlePage(RoutablePageMixin, Page):
         FieldPanel('featured_on_section', classname='class'),
         FieldPanel('featured_on_main', classname='class'),
         FieldPanel('tags', classname='full'),
-        #FieldPanel('authors', classname='class'),
+        # FieldPanel('authors', classname='class'),
     ]
 
     search_fields = Page.search_fields + [
@@ -323,7 +319,16 @@ class ArticlePage(RoutablePageMixin, Page):
         index.SearchField('section'),
         index.SearchField('summary'),
         index.SearchField('tags'),
-        #index.SearchField('authors'),
+        # index.SearchField('authors'),
+    ]
+
+    api_fields = [
+        APIField('content'),
+        APIField('section'),
+        APIField('summary'),
+        APIField('featured_on_section'),
+        APIField('featured_on_main'),
+        APIField('tags')
     ]
 
     @route(r'^(\d{4})/(\d{2})/(\d{2})/(.+)/$')
@@ -340,10 +345,10 @@ class ArticlePage(RoutablePageMixin, Page):
             raise Http404
         return Page.serve(post_page, request, *args, **kwargs)
 
-class AuthorsPage(RoutablePageMixin, Page):
 
-    name = models.CharField(max_length = 255)
-    lastName = models.CharField(max_length = 255)
+class AuthorsPage(RoutablePageMixin, Page):
+    name = models.CharField(max_length=255)
+    lastName = models.CharField(max_length=255)
     description = RichTextField(blank=True)
 
     author_rank = (
@@ -360,9 +365,9 @@ class AuthorsPage(RoutablePageMixin, Page):
         ('gs', 'Graduate Student'),
     )
 
-    #articles = models.ManyToManyField(ArticlePage, help_text="Select article names")
+    # articles = models.ManyToManyField(ArticlePage, help_text="Select article names")
     position = models.CharField(max_length=3, choices=author_rank, blank=True, default='con')
-    year = models.CharField(max_length=5, choices=author_year, blank=True, default='fr',)
+    year = models.CharField(max_length=5, choices=author_year, blank=True, default='fr', )
 
     content_panels = Page.content_panels + [
         FieldPanel('name', classname='class'),
@@ -370,5 +375,5 @@ class AuthorsPage(RoutablePageMixin, Page):
         FieldPanel('description', classname='class'),
         FieldPanel('position', classname='class'),
         FieldPanel('year', classname='class'),
-        #FieldPanel('articles', classname='class'),
+        # FieldPanel('articles', classname='class'),
     ]

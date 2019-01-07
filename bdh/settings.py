@@ -158,7 +158,6 @@ else:
             "HOST": "localhost",
             "PORT": "",
         }
-        
     }
 
 GRAPHENE = {
