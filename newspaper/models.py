@@ -369,6 +369,14 @@ class AuthorsPage(RoutablePageMixin, Page):
     position = models.CharField(max_length=3, choices=author_rank, blank=True, default='con')
     year = models.CharField(max_length=5, choices=author_year, blank=True, default='fr', )
 
+    api_fields = [
+        APIField('name'),
+        APIField('lastName'),
+        APIField('description'),
+        APIField('position'),
+        APIField('year'),
+    ]
+
     content_panels = Page.content_panels + [
         FieldPanel('name', classname='class'),
         FieldPanel('lastName', classname='class'),
