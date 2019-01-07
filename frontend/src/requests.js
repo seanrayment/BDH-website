@@ -82,15 +82,13 @@ export const bdhRequester = {
         return this.getArticle({slug: slug});
     },
 
-    /**
-     * Gets the 10 most recently published articles
-     *
-     * @param limit
-     * @returns {*}
-     */
     getNewArticles(limit) {
-        return this.getArticles({order: "-first_published_at", limit: 10});
+        return this.getArticles({order: "-first_published_at", limit: limit});
     },
 
+    getArticlesBySection(section) {
+        return this.getArticles({section: section})
+    },
 
+    
 };
